@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
 
+//* se utiliza para manejar los filtros de CORS el cual permite de cualquier lugar y cualquier metodo
 public class CorsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

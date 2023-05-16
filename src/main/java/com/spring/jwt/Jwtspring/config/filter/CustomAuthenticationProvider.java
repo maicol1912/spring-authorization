@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+//* este recibe una instancia de Authentication que es el user y el password del usuario
+//* hace la busqueda en la base de datos y si existe carga una lista de GrantedAuhtority con los roles
+//* crea una instancia de UsernamePasswordAuthenticationToken con el uusario, la contraseña y la lista de roles
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;

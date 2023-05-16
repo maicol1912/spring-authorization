@@ -23,6 +23,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.io.IOException;
 import java.util.Collections;
 
+//*El filtro se activa cuando un cliente realiza una solicitud POST a la URL configurada en el archivo de configuración de
+//* JwtConfig. En este caso, el filtro llama a un objeto AuthenticationManager que maneja la autenticación.
+
+//*El cuerpo de la solicitud debe contener un objeto LoginRequest que contiene el nombre de usuario y la contraseña. Después de leer la
+//* solicitud, el filtro llama a getAuthenticationManager() para autenticar el nombre de usuario y la contraseña mediante
+//* UsernamePasswordAuthenticationToken.
 @Slf4j
 public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

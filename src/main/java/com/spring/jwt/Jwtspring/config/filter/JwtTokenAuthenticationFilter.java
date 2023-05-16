@@ -24,21 +24,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+//* este filtro intercepta todas las solicitudes HTTP entrantes y verifica si la solicitud tiene un token JWT
+//* válido en la cabecera "Authorization". Si se encuentra un token válido, se crea un objeto de autenticación y
+//* se establece en el contexto de seguridad de Spring. Si no se encuentra un token o el token no es válido, se
+//* devuelve una respuesta de error HTTP no autorizada.
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
 
     private final JwtService jwtService;
 
+    //* todo entra por esta peticion
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
+        //* obtenemos el token del header
         String accessToken = request.getHeader(jwtConfig.getHeader());
 
         log.info("Start do filter once per request, {}", request.getRequestURI());
-
+        //* validamos que el token sea valido
         if (!ObjectUtils.isEmpty(accessToken) && accessToken.startsWith(jwtConfig.getPrefix() + " ")) {
             accessToken = accessToken.substring((jwtConfig.getPrefix() + " ").length());
 
@@ -51,6 +56,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     List<String> authorities = claims.get("authorities", List.class);
 
                     if (!ObjectUtils.isEmpty(username)) {
+                        //* creamos un objeto de authenticacion que enviaremos al contexto
                         UsernamePasswordAuthenticationToken auth =
                                 new UsernamePasswordAuthenticationToken(
                                         username,
@@ -74,6 +80,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
             }
         }
+        //* pasamos la peticion
         log.info("end do filter: {}", request.getRequestURI());
         filterChain.doFilter(request, response);
 
