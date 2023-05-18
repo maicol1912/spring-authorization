@@ -1,5 +1,6 @@
 package com.spring.jwt.Jwtspring.config;
 
+
 import com.spring.jwt.Jwtspring.config.filter.CustomAuthenticationProvider;
 import com.spring.jwt.Jwtspring.config.filter.JwtTokenAuthenticationFilter;
 import com.spring.jwt.Jwtspring.config.filter.JwtUsernamePasswordAuthenticationFilter;
@@ -20,6 +21,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -84,5 +88,20 @@ public class AppConfig {
                 .addFilterBefore(new JwtUsernamePasswordAuthenticationFilter(manager,jwtConfig,jwtService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig,jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.addAllowedOrigin("*");
+        corsConfig.addAllowedMethod("*");
+        corsConfig.addAllowedHeader("Authorization");
+        corsConfig.addAllowedHeader("Content-Type");
+        corsConfig.setMaxAge(3600L); // Tiempo máximo de almacenamiento en caché de las configuraciones CORS
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+
+        return new CorsFilter(source);
     }
 }
